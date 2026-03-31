@@ -1,0 +1,8 @@
+smartapi-python
+pandas
+numpy
+websocket-client
+requests
+python-dotenv
+pytz
+pyotp

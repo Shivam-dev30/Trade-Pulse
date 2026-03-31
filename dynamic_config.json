@@ -1,0 +1,15 @@
+{
+    "crypto_enabled": false,
+    "crypto_indicators": [],
+    "indian_enabled": false,
+    "indian_indicators": [
+        {
+            "active": true,
+            "id": "1774431489867",
+            "long": 15,
+            "short": 9,
+            "symbol": "TCS",
+            "type": "ema_cross"
+        }
+    ]
+}

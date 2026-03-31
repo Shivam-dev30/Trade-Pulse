@@ -1,0 +1,29 @@
+
+# Strategy Parameters
+TF_EXECUTION = '15min'
+TF_FILTER = '1H'
+
+# Indicators
+EMA_FAST = 9
+EMA_SLOW = 15
+EMA_FILTER = 20
+SUPERTREND_PERIOD = 31
+SUPERTREND_MULTIPLIER = 2.0
+
+# Risk Management
+CAPITAL = 100000  # Starting capital
+RISK_PER_TRADE_PERCENT = 1.0  # 1% risk
+TARGET_RR = 1.5  # 1.5R target
+
+# Daily Risk Controls
+MAX_CONSECUTIVE_LOSSES = 2
+MAX_DAILY_DRAWDOWN_PERCENT = 2.0
+
+# Entry Constraints
+MAX_DISTANCE_FROM_EMA_PERCENT = 1.0
+
+# Optimization Ranges
+OPT_SUPERTREND_PERIOD = range(20, 41)
+OPT_SUPERTREND_MULTIPLIER = [1.5, 2.0, 2.5, 3.0]
+OPT_EMA_FAST = range(8, 14)
+OPT_EMA_SLOW = range(14, 22)

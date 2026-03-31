@@ -1,0 +1,368 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AlgoTrade Alerts - Admin Interface</title>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+    <script src="https://checkout.razorpay.com/v1/checkout.js"></script>
+</head>
+<body>
+    <video class="video-bg" autoplay muted loop playsinline poster="https://static.tradingview.com/static/bundles/66547.4e3f360773f32448a609.jpg">
+        <source src="https://static.tradingview.com/static/bundles/66547.24a4f8959d57a2202684.mp4" type="video/mp4">
+        <source src="https://assets.mixkit.co/videos/preview/mixkit-flying-through-the-stars-in-space-26738-large.mp4" type="video/mp4">
+    </video>
+    <div class="bg-elements">
+        <div class="glow-blob blob-1"></div>
+        <div class="glow-blob blob-2"></div>
+        <div class="glow-blob blob-3"></div>
+        <div class="grid-overlay"></div>
+    </div>
+    
+    <div class="app-container">
+        <header class="app-header">
+            <div class="brand-section">
+                <div class="logo" onclick="window.location.reload()">
+                    <svg width="28" height="28" viewBox="0 0 24 24" fill="none" class="brand-icon" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"></polyline></svg>
+                    <h1>Trade<span class="highlight">Pulse</span></h1>
+                </div>
+                <nav>
+                    <ul class="nav-links">
+                        <li class="nav-item active" onclick="showDashboard()">Dashboard</li>
+                        <li class="nav-item" onclick="showLiveIntelligence()">Live Intelligence</li>
+                        <li class="nav-item" onclick="showBacktesting()">Backtesting</li>
+                        <li class="nav-item" onclick="showCommunity()">Community</li>
+                        <li class="nav-item" onclick="showContact()">Contact</li>
+                        <li class="nav-item pro-badge" onclick="showPricing()">Subscriptions</li>
+                        <li class="nav-item profile-nav" onclick="showProfile()">
+                            <div class="header-avatar" id="header-avatar"></div>
+                            Account
+                        </li>
+                    </ul>
+                </nav>
+            </div>
+            <div class="header-actions">
+                <button id="test-alert-btn" class="secondary-btn" style="padding:0.4rem 1rem; border-radius:6px; background:rgba(59,130,246,0.1); color:#3b82f6; border:1px solid rgba(59,130,246,0.3); cursor:pointer; font-family:inherit; font-weight:500;">Test Alarm</button>
+                <div class="pulse-status">
+                    <span class="pulse-dot"></span>
+                    Live
+                </div>
+            </div>
+        </header>
+
+        <div id="usage-banner" class="usage-banner hidden">
+            <div class="usage-stats">
+                <div class="stat-item">
+                    <span class="stat-label">Alerts</span>
+                    <span class="stat-value" id="usage-alerts">0/0</span>
+                    <div class="progress-bar-container"><div id="progress-alerts" class="progress-fill" style="width: 0%"></div></div>
+                </div>
+                <div class="stat-item">
+                    <span class="stat-label">Indicators</span>
+                    <span class="stat-value" id="usage-indicators">0/0</span>
+                    <div class="progress-bar-container"><div id="progress-indicators" class="progress-fill" style="width: 0%"></div></div>
+                </div>
+            </div>
+            <!-- Profile View (Conditional) -->
+            <div id="profile-view" class="dashboard hidden">
+                <div class="dashboard-title">
+                    <h2>Account Settings</h2>
+                    <p>Manage your professional profile and subscription intelligence.</p>
+                </div>
+                
+                <div class="profile-container">
+                    <div class="profile-card main-profile">
+                        <div class="profile-header-banner">
+                            <div class="profile-avatar-wrapper">
+                                <img id="profile-pic-display" src="https://ui-avatars.com/api/?name=User&background=3b82f6&color=fff&size=128" alt="Avatar">
+                                <label for="profile-pic-input" class="edit-avatar">
+                                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"/><circle cx="12" cy="13" r="4"/></svg>
+                                </label>
+                                <input type="file" id="profile-pic-input" hidden accept="image/*">
+                            </div>
+                            <div class="profile-name-badge">
+                                <h2 id="profile-name-title">Trader Name</h2>
+                                <span class="tier-pill elite" id="profile-tier-badge">Unlimited ELITE</span>
+                            </div>
+                        </div>
+                        
+                        <div class="profile-body">
+                            <div class="form-grid">
+                                <div class="form-group">
+                                    <label>Full Name</label>
+                                    <input type="text" id="profile-name" placeholder="Enter your full name">
+                                </div>
+                                <div class="form-group">
+                                    <label>Phone Number</label>
+                                    <input type="text" id="profile-phone" placeholder="+91 XXXXX XXXXX">
+                                </div>
+                                <div class="form-group">
+                                    <label>Email Address</label>
+                                    <input type="email" id="profile-email" readonly style="opacity: 0.6; cursor: not-allowed;">
+                                </div>
+                                <div class="form-group">
+                                    <label>Account Tier</label>
+                                    <div class="tier-display" id="profile-tier-text">Unlimited ELITE Plan</div>
+                                </div>
+                            </div>
+                            <button class="primary-btn" onclick="saveProfile()" style="max-width: 200px; margin-top: 2rem;">Save Changes</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <button class="secondary-btn" id="manage-plan-btn" onclick="showPricing()" style="padding:0.5rem 1rem; font-size:0.8rem; border-radius:8px;">Manage Plan</button>
+        </div>
+
+        <!-- LIVE MONITORING SECTION (Conditional View) -->
+        <div id="live-intelligence-view" class="dashboard hidden">
+            <div class="dashboard-title">
+                <h2>Intelligence Terminal</h2>
+                <p>Real-time algorithmic monitoring and live pricing stream.</p>
+            </div>
+            
+            <div class="active-intelligence-container">
+                <div class="intelligence-header">
+                    <h3><span class="live-signal-orb pulse"></span> Live Market Intelligence Engine</h3>
+                </div>
+                <div id="active-tickers-grid" class="tickers-grid">
+                    <div class="no-active-alerts">
+                        <p>No symbols in current live stream. Activate a strategy below to start tracking.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <main id="main-dashboard" class="dashboard">
+            <div class="dashboard-title">
+                <h2>Market Modules</h2>
+                <p>Toggle real-time data ingestion and configure individual algorithmic triggers.</p>
+            </div>
+
+            <section class="markets-panel">
+                
+                <!-- INDIAN MARKET CARD -->
+                <div class="market-card" id="card-indian">
+                    <div class="card-main">
+                        <div class="card-info">
+                            <div class="icon-wrapper indian-icon">
+                                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2v20M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg>
+                            </div>
+                            <div class="text">
+                                <h3>Indian Market</h3>
+                                <span>Angel One • NSE/MCX Data Stream</span>
+                            </div>
+                        </div>
+                        <label class="toggle-switch main-toggle">
+                            <input type="checkbox" id="toggle-indian" checked>
+                            <span class="slider"></span>
+                        </label>
+                    </div>
+
+                    <div class="card-body">
+                        <div class="indicators-section">
+                            <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:1.25rem;">
+                                <h4 class="section-title" style="margin:0;">Active Algorithms (Indian)</h4>
+                                <button class="add-indicator-btn" onclick="openIndicatorModal('indian')" style="background:transparent;border:1px dashed var(--panel-border);color:var(--text-secondary);padding:0.3rem 0.8rem;border-radius:6px;cursor:pointer;font-family:inherit;font-size:0.85rem;transition:all 0.2s;">+ Add Algo</button>
+                            </div>
+                            <div class="indicators-grid" id="indian-grid">
+                                <!-- Dynamic JS Injection -->
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- CRYPTO MARKET CARD -->
+                <div class="market-card" id="card-crypto">
+                    <div class="card-main">
+                        <div class="card-info">
+                            <div class="icon-wrapper crypto-icon">
+                                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M11 21.73a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73z"></path><line x1="12" y1="22" x2="12" y2="12"></line><line x1="12" y1="12" x2="21.04" y2="6.78"></line><line x1="12" y1="12" x2="2.96" y2="6.78"></line></svg>
+                            </div>
+                            <div class="text">
+                                <h3>Crypto Market</h3>
+                                <span>Delta Exchange • Perps Stream</span>
+                            </div>
+                        </div>
+                        <label class="toggle-switch main-toggle">
+                            <input type="checkbox" id="toggle-crypto" checked>
+                            <span class="slider"></span>
+                        </label>
+                    </div>
+
+                    <div class="card-body">
+                        <div class="indicators-section">
+                            <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:1.25rem;">
+                                <h4 class="section-title" style="margin:0;">Active Algorithms (Crypto)</h4>
+                                <button class="add-indicator-btn" onclick="openIndicatorModal('crypto')" style="background:transparent;border:1px dashed var(--panel-border);color:var(--text-secondary);padding:0.3rem 0.8rem;border-radius:6px;cursor:pointer;font-family:inherit;font-size:0.85rem;transition:all 0.2s;">+ Add Algo</button>
+                            </div>
+                            <div class="indicators-grid" id="crypto-grid">
+                                <!-- Dynamic JS Injection -->
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+            </section>
+        </main>
+    </div>
+
+    <!-- The Global Form Modal -->
+    <div id="algoModal" class="modal-overlay">
+        <div class="modal-backdrop"></div>
+        <!-- existing modal content -->
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3>Add New Algorithm</h3>
+                <button class="close-modal" onclick="closeIndicatorModal()">&times;</button>
+            </div>
+            <div class="modal-body">
+                <input type="hidden" id="current-market-context">
+                
+                <div class="form-group" id="symbol-group">
+                    <label>Target Asset / Coin</label>
+                    <div id="asset-selector-container">
+                        <input type="text" id="algo-symbol" placeholder="e.g. BTCUSD" />
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label>Algorithm Type</label>
+                    <select id="algo-type-select" onchange="renderAlgoParams()">
+                        <option value="supertrend">Supertrend</option>
+                        <option value="ema">EMA (Moving Average)</option>
+                        <option value="ema_cross">EMA Cross</option>
+                        <option value="vwap">VWAP</option>
+                        <option value="atr">ATR</option>
+                        <option value="bb">Bollinger Bands</option>
+                    </select>
+                </div>
+
+                <div id="dynamic-params-container">
+                    <!-- JS renders params here -->
+                </div>
+
+                <button class="primary-btn" onclick="saveNewAlgorithm()">Deploy Algorithm</button>
+            </div>
+        </div>
+    </div>
+    <!-- Subscription Background Video – outside modal to avoid stacking context trap -->
+    <video id="pricing-bg-video" class="pricing-video-bg" autoplay muted loop playsinline style="display:none;">
+        <source src="video/subscription_bg.mp4" type="video/mp4">
+    </video>
+
+    <!-- Pricing Page Overlay -->
+    <div id="pricingModal" class="modal-overlay">
+        <div class="modal-backdrop"></div>
+        <div class="modal-content">
+            <div class="pricing-container">
+                <div style="display: flex; justify-content: flex-end; padding: 0 2rem;">
+                    <button class="close-modal" onclick="closePricingModal()" style="font-size: 2rem;">&times;</button>
+                </div>
+                <div class="pricing-header">
+                    <h2>Plans for every level of ambition</h2>
+                    <p>Unlock professional-grade indicators, real-time alerts, and institutional backtesting.</p>
+                </div>
+                
+                <div class="cycle-toggle">
+                    <span style="font-weight: 700;">Monthly</span>
+                    <label class="toggle-switch">
+                        <input type="checkbox" id="billing-cycle-toggle" onchange="toggleBillingCycle()">
+                        <span class="slider"></span>
+                    </label>
+                    <span style="font-weight: 700;">Annual <span class="discount-tag">SAVE 17%</span></span>
+                </div>
+                <div class="pricing-grid">
+                    <!-- Free Plan -->
+                    <div class="pricing-card">
+                        <div class="card-tier-name" style="color: var(--tier-free)">Free</div>
+                        <div class="card-price">₹0<span>/mo</span></div>
+                        <ul class="feature-list">
+                            <li><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><polyline points="20 6 9 17 4 12"></polyline></svg> 10 Alerts</li>
+                            <li><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><polyline points="20 6 9 17 4 12"></polyline></svg> 2 Indicators</li>
+                            <li class="disabled"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><polyline points="20 6 9 17 4 12"></polyline></svg> Real-time Delay</li>
+                        </ul>
+                        <button class="pricing-btn" disabled>Current Plan</button>
+                    </div>
+                    <!-- Starter Plan -->
+                    <div class="pricing-card popular">
+                        <div class="popular-badge">Best Value</div>
+                        <div class="card-tier-name" style="color: var(--tier-starter)">Starter</div>
+                        <div class="card-price">₹149<span>/mo</span></div>
+                        <ul class="feature-list">
+                            <li><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><polyline points="20 6 9 17 4 12"></polyline></svg> 50 Alerts</li>
+                            <li><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><polyline points="20 6 9 17 4 12"></polyline></svg> 5 Indicators</li>
+                            <li><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><polyline points="20 6 9 17 4 12"></polyline></svg> Real-time Alerts</li>
+                        </ul>
+                        <button class="pricing-btn primary" onclick="handleSubscription('STARTER')">Upgrade Now</button>
+                    </div>
+                    <!-- Pro Plan -->
+                    <div class="pricing-card">
+                        <div class="card-tier-name" style="color: var(--tier-pro)">Pro</div>
+                        <div class="card-price">₹399<span>/mo</span></div>
+                        <ul class="feature-list">
+                            <li><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><polyline points="20 6 9 17 4 12"></polyline></svg> 200 Alerts</li>
+                            <li><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><polyline points="20 6 9 17 4 12"></polyline></svg> Unlimited Indicators</li>
+                            <li><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><polyline points="20 6 9 17 4 12"></polyline></svg> Strategy Templates</li>
+                        </ul>
+                        <button class="pricing-btn" onclick="handleSubscription('PRO')">Go Pro</button>
+                    </div>
+                    <!-- Elite Plan -->
+                    <div class="pricing-card">
+                        <div class="card-tier-name" style="color: var(--tier-elite)">Elite</div>
+                        <div class="card-price">₹799<span>/mo</span></div>
+                        <ul class="feature-list">
+                            <li><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><polyline points="20 6 9 17 4 12"></polyline></svg> Unlimited Alerts</li>
+                            <li><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><polyline points="20 6 9 17 4 12"></polyline></svg> AI Gen (Future)</li>
+                            <li><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><polyline points="20 6 9 17 4 12"></polyline></svg> Full Backtesting</li>
+                        </ul>
+                        <button class="pricing-btn" onclick="handleSubscription('ELITE')">Select Elite</button>
+                    </div>
+                </div>
+
+                <!-- Comparison Table -->
+                <div class="comparison-container">
+                    <h2>Compare Plans</h2>
+                    <table class="comparison-table">
+                        <thead>
+                            <tr>
+                                <th>Features</th>
+                                <th>Free</th>
+                                <th style="color: var(--tier-starter)">Starter</th>
+                                <th style="color: var(--tier-pro)">Pro</th>
+                                <th style="color: var(--tier-elite)">Elite</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <!-- Alerts -->
+                            <tr class="feature-group"><td colspan="5">Alerts & Ingestion</td></tr>
+                            <tr><td>Max Active Alerts</td><td>10</td><td>50</td><td>200</td><td>Unlimited</td></tr>
+                            <tr><td>Alert Delay</td><td>5-14s</td><td>Real-time</td><td>Priority</td><td>Fastest</td></tr>
+                            <tr><td>Multi-condition Triggers</td><td class="cross">✘</td><td class="check">✔</td><td class="check">✔</td><td class="check">✔</td></tr>
+                            <tr><td>Webhook Support</td><td class="cross">✘</td><td class="cross">✘</td><td class="check">✔</td><td class="check">✔</td></tr>
+                            
+                            <!-- Indicators -->
+                            <tr class="feature-group"><td colspan="5">Technical Indicators</td></tr>
+                            <tr><td>Active Indicators</td><td>2</td><td>5</td><td>Unlimited</td><td>Unlimited</td></tr>
+                            <tr><td>Custom Pine Scripts</td><td class="cross">✘</td><td class="cross">✘</td><td class="check">✔</td><td class="check">✔</td></tr>
+                            <tr><td>Volume Profile</td><td class="cross">✘</td><td class="check">✔</td><td class="check">✔</td><td class="check">✔</td></tr>
+                            
+                            <!-- Backtesting -->
+                            <tr class="feature-group"><td colspan="5">Backtesting & Simulation</td></tr>
+                            <tr><td>Backtest History</td><td>7 Days</td><td>30 Days</td><td>1 Year</td><td>Max History</td></tr>
+                            <tr><td>Deep Backtesting</td><td class="cross">✘</td><td class="cross">✘</td><td class="cross">✘</td><td class="check">✔</td></tr>
+                            <tr><td>AI Strategy Generator</td><td class="cross">✘</td><td class="cross">✘</td><td class="cross">✘</td><td class="check">✔</td></tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Toast Notification System -->
+    <div id="toast-container" class="toast-container"></div>
+
+    <script src="app.js"></script>
+</body>
+</html>
